@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/14 11:43:38 by porellan          #+#    #+#             */
-/*   Updated: 2024/10/10 19:07:22 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/14 10:58:50 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <string.h>
 # include <ctype.h>
 # include <unistd.h>
+# include <fcntl.h>
+# include <limits.h>
 
 typedef struct s_list
 {
@@ -70,5 +72,20 @@ void	ft_lstdelone(t_list *lst, void (*del)(void*));
 void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX FOPEN_MAX
+# endif
+
+char	*get_next_line(int fd);
+char	*ft_strchr_gnl(const char *s, int n);
+char	*ft_strjoin_gnl(char *s1, char const *s2);
+char	*read_nl(char *temp, int fd);
+char	*sub_nl(char *s);
+char	*delete_nl(char *line_rd);
 
 #endif

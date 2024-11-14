@@ -41,7 +41,9 @@ SRC_FILES_BONUS = ft_lstadd_back_bonus.c \
 					ft_lstlast_bonus.c \
 					ft_lstmap_bonus.c \
 					ft_lstnew_bonus.c \
-					ft_lstsize_bonus.c
+					ft_lstsize_bonus.c \
+					get_next_line_bonus.c \
+					get_next_line_utils_bonus.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 BONUS_OBJ_FILES = $(SRC_FILES_BONUS:.c=.o)
 
