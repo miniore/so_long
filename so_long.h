@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:19:02 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/14 11:36:18 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/18 21:31:18 by miniore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,5 +15,8 @@
 
 # include "Libft/libft.h"
 # include "Libft/Printf/ft_printf.h"
+
+char	**read_map(char *file);
+void	check_map(char **map);
 
 #endif

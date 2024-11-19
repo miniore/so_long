@@ -3,49 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:14:32 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/14 13:34:04 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/18 21:32:42 by miniore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-char	**read_map(char *map)
-{
-    int	fd;
-	int	lines;
-
-	lines = 3;
-	fd = open(map, O_RDONLY);
-	if (fd == -1)
-		exit(1);
-	while (lines)
-	{
-		map = get_next_line(fd);
-		ft_printf("%s", map);
-		lines--;
-	}
-	return (0);
-}
-
-void	check_file(char *map)
+void	check_file(char *file)
 {
 	int len;
 
-	len = ft_strlen(map);
-    if (!ft_strnstr(map, ".ber", len))
+	len = ft_strlen(file);
+    if (!ft_strnstr(file, ".ber", len))
         exit(1);
 }
 
 int main(int argc, char **argv)
 {    
-    //char	**map;
+    t_game	game;
 	
 	if (argc != 2)
         exit(1);
     check_file(argv[1]);
-	read_map(argv[1]);
+	game.map = read_map(argv[1]);
+	check_map(game.map);
 	return (0);
 }
