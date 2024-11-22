@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 21:30:00 by miniore           #+#    #+#             */
-/*   Updated: 2024/11/18 21:30:45 by miniore          ###   ########.fr       */
+/*   Updated: 2024/11/19 13:06:22 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ static char	**copy_map(t_list *lines)
 	while (lines)
 	{
 		map_line = lines->content;
-		map[i] = ft_strdup(map_line); 
+		map[i] = ft_strdup(map_line);
 		lines = lines->next;
+		i++;
 	}
 	return (map);
 }
@@ -50,9 +51,10 @@ char	**read_map(char *file)
 	while (1)
 	{
 		map_lines = get_next_line(fd);
-		ft_printf("%s", map_lines);
+		if (!map_lines)
+			break;
 		temp = ft_lstnew(map_lines);
-		ft_lstadd_back(lines, temp);
+		ft_lstadd_back(&lines, temp);
 	}
 	map = copy_map(lines);
 	ft_lstclear(&lines, free);
