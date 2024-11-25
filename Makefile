@@ -2,27 +2,32 @@ NAME = so_long
 
 LIBFT = Libft/libft.a
 PRINTF = Libft/Printf/libftprintf.a
-LIBMLX = MLX42
+
+MLX42 := MLX42/build/libmlx42.a
+MLX42_DIR := MLX42
+MLX42_BUILD := MLX42/build
+MLX := -L$(MLX42_BUILD) -lmlx42 -ldl -lglfw -pthread -lm
 
 
-HEADERS	:= -I ./include -I $(LIBMLX)/include
+INCLUDE := -Iinclude -IMLX42/include/MLX42
 SRC_FILES = so_long.c \
 			get_map.c \
-			check_map.c
+			check_map.c \
+			check_valid_map.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
-LIBS = $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra -Wunreachable-code -Ofast
+CC = cc
+CFLAGS = -Wall -Werror -Wextra -O2 $(INCLUDE)
 
-all: libmlx $(NAME)
+all: $(NAME)
 	@echo "make    ✅"
 
-ibmlx:
-	@cmake -S $(LIBMLX) -B $(LIBMLX)/build && cmake --build $(LIBMLX)/build -j4
+$(MLX42):
+	cmake -S $(MLX42_DIR) -B $(MLX42_BUILD)
+	cmake --build $(MLX42_BUILD) -j4
 
-$(NAME): $(OBJ_FILES) $(PRINTF) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJ_FILES) $(PRINTF) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJ_FILES) $(PRINTF) $(LIBFT) $(MLX42)
+	$(CC) $(CFLAGS) $(OBJ_FILES) $(PRINTF) $(LIBFT) $(MLX) -o $(NAME)
 
 $(LIBFT):
 	make -C Libft
@@ -37,7 +42,7 @@ clean:
 	make clean -C Libft
 	make clean -C Libft/Printf
 	rm -f $(OBJ_FILES)
-	rm -rf $(LIBMLX)/build
+	rm -rf $(MLX42_BUILD)
 	@echo "clean   🌪️"
 
 fclean: clean
