@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:14:32 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/26 19:44:52 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/26 22:05:57 by miniore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,44 +41,74 @@ void	calculate_size(t_game *game)
 
 // }
 
-void	press_key(t_game *game)
+void	move_player(t_game *game, int y, int x, keys_t key)
 {
-	int	i;
+	//static int	i;
 
-	i = 0;
-	
-	ft_printf("Movement number: %i\n");
+	if (key == MLX_KEY_W && game->map[y - 1][x] != 1)
+	{
+		game->player_img->instances[0].y -= 10;
+		// i++;
+		// ft_printf("Movement number: %i\n", i);
+	}
+	if (key == MLX_KEY_A && game->map[y][x - 1] != 1)
+	{
+		game->player_img->instances[0].x -= 10;
+		// i++;
+		// ft_printf("Movement number: %i\n", i);
+	}
+	if (key == MLX_KEY_S && game->map[y + 1][x] != 1)
+	{
+		game->player_img->instances[0].y += 10;
+		// i++;
+		// ft_printf("Movement number: %i\n", i);
+	}
+	if (key == MLX_KEY_D && game->map[y][x + 1] != 1)
+	{
+		game->player_img->instances[0].x += 10;
+		// i++;
+		// ft_printf("Movement number: %i\n", i);
+	}
 }
 
-void	repeat_key(t_game *game)
+void	press_key(t_game *game, keys_t key)
 {
-	int	i;
+	int	y;
+	int	x;
+	int	found;
 
-	i = 0;
-	ft_printf("Movement number: %i\n");
+	y = 0;
+	found = 0;
+	while(!found && game->map[y++])
+	{
+		x = 0;
+		while(game->map[y][x])
+		{
+			x++;
+			if(game->map[y][x] == 'P')
+					found = 1;
+		}
+	}
+	if(found == 1)
+		move_player(game, y, x, key);
 }
 
 void my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game *game;
+	static int	i;
 
 	game = param;
 	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
-		press_key(game);
-	if (keydata.key == MLX_KEY_W && keydata.action == MLX_REPEAT)
-		puts("!");
+		press_key(game, keydata.key);
 	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
-		puts("Hello ");
-	if (keydata.key == MLX_KEY_A && keydata.action == MLX_REPEAT)
-		puts("e");
+		press_key(game, keydata.key);
 	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS)
-		puts("Hello ");
-	if (keydata.key == MLX_KEY_S && keydata.action == MLX_REPEAT)
-		puts("h");
+		press_key(game, keydata.key);
 	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
-		puts("Hello ");
-	if (keydata.key == MLX_KEY_D && keydata.action == MLX_REPEAT)
-		puts("ñ");
+		press_key(game, keydata.key);
+	i += 1;
+	ft_printf("Movement number: %i\n", i);
 }
 
 int main(int argc, char **argv)
