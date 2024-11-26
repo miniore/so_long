@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:14:32 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/25 19:32:26 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:44:52 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,57 +31,54 @@ void	calculate_size(t_game *game)
 		game->height = i;
 }
 
-void	put_img(t_game *game, mlx_image_t *img, int x, int y)
+// void	ft_hook(void *data)    //Usar para los movimientos??
+// {
+// 	t_game * game;
+
+// 	game = (t_game *)data;
+// 	create_textures(game);
+// 	load_images(game);
+
+// }
+
+void	press_key(t_game *game)
 {
-	if (!(mlx_image_to_window(game->window, img, x * 64, y * 64)))
-		ft_printf("Error\n");
+	int	i;
+
+	i = 0;
+	
+	ft_printf("Movement number: %i\n");
 }
 
-int	load_images(t_game *game)
+void	repeat_key(t_game *game)
 {
-	int	x;
-	int	y;
+	int	i;
 
-	x = 0;
-	while (game->map[x])
-	{
-		y = 0;
-		while (game->map[x][y])
-		{
-			if (game->map[x][y] == FLOOR)
-				put_img(game, game->floor_img, x, y);
-			// if (game->map[x][y] == WALL)
-			// 	put_img(game, game->wall_img, x, y);
-			// if (game->map[x][y] == PLAYER)
-			// 	put_img(game, game->player_img, x, y);
-			// if (game->map[x][y] == COLLECT)
-			// 	put_img(game, game->collect_img, x, y);
-			// if (game->map[x][y] == END)
-			// 	put_img(game, game->end_img, x, y);
-		}
-	}
-	return (EXIT_SUCCESS);
+	i = 0;
+	ft_printf("Movement number: %i\n");
 }
 
-mlx_image_t	*textures_to_img(t_game *game, char *route)
+void my_keyhook(mlx_key_data_t keydata, void *param)
 {
-	mlx_texture_t	*texture;
-	mlx_image_t		*img;
+	t_game *game;
 
-	texture = mlx_load_png(route);
-	if (!texture)
-        ft_printf("Error\n");
-	img = mlx_texture_to_image(game->window, texture);
-	return (img);
-}
-
-void	create_textures(t_game *game)
-{
-	game->floor_img = textures_to_img(game, "textures/floor.png");
-	// game->wall_img = textures_to_img(game, "textures/");
-	// game->player_img = textures_to_img(game, "textures/");
-	// game->collect_img = textures_to_img(game, "textures/");
-	// game->end_img = textures_to_img(game, "textures/");
+	game = param;
+	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
+		press_key(game);
+	if (keydata.key == MLX_KEY_W && keydata.action == MLX_REPEAT)
+		puts("!");
+	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
+		puts("Hello ");
+	if (keydata.key == MLX_KEY_A && keydata.action == MLX_REPEAT)
+		puts("e");
+	if (keydata.key == MLX_KEY_S && keydata.action == MLX_PRESS)
+		puts("Hello ");
+	if (keydata.key == MLX_KEY_S && keydata.action == MLX_REPEAT)
+		puts("h");
+	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
+		puts("Hello ");
+	if (keydata.key == MLX_KEY_D && keydata.action == MLX_REPEAT)
+		puts("ñ");
 }
 
 int main(int argc, char **argv)
@@ -100,7 +97,8 @@ int main(int argc, char **argv)
 		return(1);   //Poner funcion errores personalizada
 	create_textures(game);
 	load_images(game);
-	//mlx_loop_hook(mlx, ft_hook, mlx);
+	mlx_key_hook(game->window, my_keyhook, game);
+	//mlx_loop_hook(game->window, ft_hook, (void *)game);
 	mlx_loop(game->window);
 	mlx_terminate(game->window);
 	return (0);

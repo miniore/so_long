@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:19:02 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/25 19:06:45 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:46:00 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,7 @@ typedef struct game
 char	**read_map(char *file);
 void	check_map(char **map);
 void	check_valid_journey(char **map, int collect);
+void	create_textures(t_game *game);
+int		load_images(t_game *game);
 
 #endif

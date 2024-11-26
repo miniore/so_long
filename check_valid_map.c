@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:29:45 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/25 17:34:34 by porellan         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:51:54 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ void	check_valid_journey(char **map, int collect)
 	int	moving;
 	int	i;
 	int	j;
-	//int k = 0;
 
 	map_copy = map_dup(map);
 	moving = 1;
@@ -111,11 +110,6 @@ void	check_valid_journey(char **map, int collect)
 			i++;
 		}
 	}
-	// while (map_copy[k])
-	// {
-	// 	ft_printf("%s", map_copy[k]);
-	// 	k++;
-	// }
 	end_found = check_end(map_copy);				
 	if (moving == 1 && (!collect && end_found == 1))
 		ft_printf("Journey success\n");

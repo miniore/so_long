@@ -13,7 +13,8 @@ INCLUDE := -Iinclude -IMLX42/include/MLX42
 SRC_FILES = so_long.c \
 			get_map.c \
 			check_map.c \
-			check_valid_map.c
+			check_valid_map.c \
+			get_images.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 
 CC = cc
