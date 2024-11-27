@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:14:32 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/26 22:05:57 by miniore          ###   ########.fr       */
+/*   Updated: 2024/11/27 13:24:13 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,33 +41,54 @@ void	calculate_size(t_game *game)
 
 // }
 
-void	move_player(t_game *game, int y, int x, keys_t key)
+void	move_player(t_game *game, int x, int y, keys_t key)
 {
-	//static int	i;
-
-	if (key == MLX_KEY_W && game->map[y - 1][x] != 1)
+	static int	i;
+	int j = 0;
+	
+	while (1)
 	{
-		game->player_img->instances[0].y -= 10;
-		// i++;
-		// ft_printf("Movement number: %i\n", i);
+		if (!game->map[j])
+			break;
+		ft_printf("%s", game->map[j]);
+		j++;
 	}
-	if (key == MLX_KEY_A && game->map[y][x - 1] != 1)
+	if (game->map[y][x - 1] != WALL && key == MLX_KEY_W)
 	{
-		game->player_img->instances[0].x -= 10;
-		// i++;
-		// ft_printf("Movement number: %i\n", i);
+		mlx_image_to_window(game->window, game->player_img, y * 64, (x - 1) * 64);
+		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
+		game->map[x][y] = FLOOR;
+		game->map[x][y - 1] = PLAYER;
+		i++;
+		ft_printf("Movement number: %i\n", i);
 	}
-	if (key == MLX_KEY_S && game->map[y + 1][x] != 1)
+	if (game->map[x - 1][y] != WALL && key == MLX_KEY_A)
 	{
-		game->player_img->instances[0].y += 10;
-		// i++;
-		// ft_printf("Movement number: %i\n", i);
+		mlx_image_to_window(game->window, game->player_img, (y - 1) * 64, x * 64);
+		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
+		game->map[x][y] = FLOOR;
+		game->map[x - 1][y] = PLAYER;
+		i++;
+		ft_printf("Movement number: %i\n", i);
 	}
-	if (key == MLX_KEY_D && game->map[y][x + 1] != 1)
+	if (game->map[x][y + 1] != WALL && key == MLX_KEY_S)
 	{
-		game->player_img->instances[0].x += 10;
-		// i++;
-		// ft_printf("Movement number: %i\n", i);
+		mlx_image_to_window(game->window, game->player_img, y * 64, (x + 1) * 64);
+		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
+		game->map[x][y] = FLOOR;
+		game->map[x][y + 1] = PLAYER;
+		i++;
+		ft_printf("Movement number: %i\n", i);
+	}
+	if (game->map[x + 1][y] != WALL && key == MLX_KEY_D)
+	{
+		mlx_image_to_window(game->window, game->player_img, (y + 1) * 64, x * 64);
+		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
+		game->map[x][y] = FLOOR;
+		game->map[x + 1][y] = PLAYER;
+		//game->player_img->instances[0].x += 64;
+		i++;
+		ft_printf("Movement number: %i\n", i);
 	}
 }
 
@@ -77,26 +98,26 @@ void	press_key(t_game *game, keys_t key)
 	int	x;
 	int	found;
 
-	y = 0;
+	x = 0;
 	found = 0;
-	while(!found && game->map[y++])
+	while(!found && game->map[x++])
 	{
-		x = 0;
-		while(game->map[y][x])
+		y = 0;
+		while(!found && game->map[x][y])
 		{
-			x++;
-			if(game->map[y][x] == 'P')
+			y++;
+			if(game->map[x][y] == PLAYER)
 					found = 1;
 		}
 	}
+	ft_printf("y: %i x: %i\n", y, x);
 	if(found == 1)
-		move_player(game, y, x, key);
+		move_player(game, x, y, key);
 }
 
 void my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game *game;
-	static int	i;
 
 	game = param;
 	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
@@ -107,12 +128,10 @@ void my_keyhook(mlx_key_data_t keydata, void *param)
 		press_key(game, keydata.key);
 	if (keydata.key == MLX_KEY_D && keydata.action == MLX_PRESS)
 		press_key(game, keydata.key);
-	i += 1;
-	ft_printf("Movement number: %i\n", i);
 }
 
 int main(int argc, char **argv)
-{    
+{
     t_game	*game  = NULL;
 
 	if (argc != 2)
