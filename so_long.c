@@ -6,11 +6,17 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:14:32 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/27 13:24:13 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/13 21:06:58 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	ft_perror(char *error_message)
+{
+	ft_printf("%s\n", error_message);
+	exit(1);
+}
 
 void	check_file(char *file)
 {
@@ -18,7 +24,7 @@ void	check_file(char *file)
 
 	len = ft_strlen(file);
     if (!ft_strnstr(file, ".ber", len))
-        exit(1);
+        ft_perror("File error");
 }
 
 void	calculate_size(t_game *game)
@@ -31,62 +37,55 @@ void	calculate_size(t_game *game)
 		game->height = i;
 }
 
-// void	ft_hook(void *data)    //Usar para los movimientos??
-// {
-// 	t_game * game;
+void	end_checker(t_game *game, int y, int x)
+{	
+	if(game->map[y][x] == COLLECT)
+		game->collectives -= 1;
+	if(game->collectives == 0 && game->map[y][x] == END)
+		exit(1);
+}
 
-// 	game = (t_game *)data;
-// 	create_textures(game);
-// 	load_images(game);
 
-// }
-
-void	move_player(t_game *game, int x, int y, keys_t key)
+void	move_player(t_game *game, int y, int x, keys_t key)
 {
 	static int	i;
-	int j = 0;
-	
-	while (1)
+	if (game->map[y - 1][x] != WALL && key == MLX_KEY_W)
 	{
-		if (!game->map[j])
-			break;
-		ft_printf("%s", game->map[j]);
-		j++;
-	}
-	if (game->map[y][x - 1] != WALL && key == MLX_KEY_W)
-	{
-		mlx_image_to_window(game->window, game->player_img, y * 64, (x - 1) * 64);
-		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
-		game->map[x][y] = FLOOR;
-		game->map[x][y - 1] = PLAYER;
+		end_checker(game, y - 1, x);
+		mlx_image_to_window(game->window, game->player_img, x * 64, (y - 1) * 64);
+		mlx_image_to_window(game->window, game->floor_img, x * 64, y * 64);
+		game->map[y][x] = FLOOR;
+		game->map[y - 1][x] = PLAYER;
 		i++;
 		ft_printf("Movement number: %i\n", i);
 	}
-	if (game->map[x - 1][y] != WALL && key == MLX_KEY_A)
+	if (game->map[y][x - 1] != WALL && key == MLX_KEY_A)
 	{
-		mlx_image_to_window(game->window, game->player_img, (y - 1) * 64, x * 64);
-		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
-		game->map[x][y] = FLOOR;
-		game->map[x - 1][y] = PLAYER;
+		end_checker(game, y, x - 1);
+		mlx_image_to_window(game->window, game->player_img, (x - 1) * 64, y * 64);
+		mlx_image_to_window(game->window, game->floor_img, x * 64, y * 64);
+		game->map[y][x] = FLOOR;
+		game->map[y][x - 1] = PLAYER;
 		i++;
 		ft_printf("Movement number: %i\n", i);
 	}
-	if (game->map[x][y + 1] != WALL && key == MLX_KEY_S)
+	if (game->map[y + 1][x] != WALL && key == MLX_KEY_S)
 	{
-		mlx_image_to_window(game->window, game->player_img, y * 64, (x + 1) * 64);
-		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
-		game->map[x][y] = FLOOR;
-		game->map[x][y + 1] = PLAYER;
+		end_checker(game, y + 1, x);
+		mlx_image_to_window(game->window, game->player_img, x * 64, (y + 1) * 64);
+		mlx_image_to_window(game->window, game->floor_img, x * 64, y * 64);
+		game->map[y][x] = FLOOR;
+		game->map[y + 1][x] = PLAYER;
 		i++;
 		ft_printf("Movement number: %i\n", i);
 	}
-	if (game->map[x + 1][y] != WALL && key == MLX_KEY_D)
+	if (game->map[y][x + 1] != WALL && key == MLX_KEY_D)
 	{
-		mlx_image_to_window(game->window, game->player_img, (y + 1) * 64, x * 64);
-		mlx_image_to_window(game->window, game->floor_img, y * 64, x * 64);
-		game->map[x][y] = FLOOR;
-		game->map[x + 1][y] = PLAYER;
-		//game->player_img->instances[0].x += 64;
+		end_checker(game, y, x + 1);
+		mlx_image_to_window(game->window, game->player_img, (x + 1) * 64, y * 64);
+		mlx_image_to_window(game->window, game->floor_img, x * 64, y * 64);
+		game->map[y][x] = FLOOR;
+		game->map[y][x + 1] = PLAYER;
 		i++;
 		ft_printf("Movement number: %i\n", i);
 	}
@@ -98,28 +97,26 @@ void	press_key(t_game *game, keys_t key)
 	int	x;
 	int	found;
 
-	x = 0;
+	y = 0;
 	found = 0;
-	while(!found && game->map[x++])
+	while(!found && y++ < game->height)
 	{
-		y = 0;
-		while(!found && game->map[x][y])
+		x = 0;
+		while(!found && x++ < game->width)
 		{
-			y++;
-			if(game->map[x][y] == PLAYER)
-					found = 1;
+			if(game->map[y][x] == PLAYER)
+				found = 1;
 		}
 	}
-	ft_printf("y: %i x: %i\n", y, x);
-	if(found == 1)
-		move_player(game, x, y, key);
+	if(found == 1 && key == MLX_KEY_W)     //Aqui me quede. Configurar las cuatro teclas de esta manera a ver si reducen lineas.
+		move_player(game, y, x, key);      //Ajustar funciones en archivos. Cambio de imagen al cojer moneda y final. Frees y leaks.
 }
 
 void my_keyhook(mlx_key_data_t keydata, void *param)
 {
 	t_game *game;
 
-	game = param;
+	game = (t_game *)param;
 	if (keydata.key == MLX_KEY_W && keydata.action == MLX_PRESS)
 		press_key(game, keydata.key);
 	if (keydata.key == MLX_KEY_A && keydata.action == MLX_PRESS)
@@ -139,15 +136,14 @@ int main(int argc, char **argv)
 	check_file(argv[1]);
 	game = (t_game *)ft_calloc(1, sizeof(t_game));
 	game->map = read_map(argv[1]);
-	check_map(game->map);
+	check_map(game);
 	calculate_size(game);
 	game->window = mlx_init(game->width * 64, game->height * 64, "Game42", false);
 	if (!game->window)
-		return(1);   //Poner funcion errores personalizada
+		ft_perror("Window error");
 	create_textures(game);
 	load_images(game);
 	mlx_key_hook(game->window, my_keyhook, game);
-	//mlx_loop_hook(game->window, ft_hook, (void *)game);
 	mlx_loop(game->window);
 	mlx_terminate(game->window);
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 19:05:27 by miniore           #+#    #+#             */
-/*   Updated: 2024/11/26 20:31:35 by miniore          ###   ########.fr       */
+/*   Updated: 2025/01/13 20:35:42 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ static void	check_limits(char **map)
 	while (j < row_size - 1)
 	{
 		if (map[0][j] != 49 || map[column_size - 1][j] != 49)
-			ft_printf("Limits error 1\n");
+			ft_perror("Map limits error.");
 		j++;
 	}
 	i = 1;
 	while (i < column_size)
 	{
 		if (map[i][0] != 49 || map[i][row_size - 2] != 49)
-			ft_printf("Limits error 2\n");
+			ft_perror("Map limits error.");
 		i++;
 	}
 }
@@ -49,34 +49,31 @@ static void	count_elements(char c)
 	if (c == 69)
 		end_final++;
 	if (player_count > 1 || end_final > 1)
-		ft_printf("Too many player or end elements");
+		ft_perror("Too many player or end elements.");
 }
 
-static int	check_elements(char **map)
+void	check_elements(t_game *game)
 {
 	int	i;
 	int	j;
-	int	collective_count;
 
 	i = 0;
-	collective_count = 0;
-	while (map[i])
+	while (game->map[i])
 	{
 		j = 0;
-		while (map[i][j] && map[i][j] != '\n')
+		while (game->map[i][j] && game->map[i][j] != '\n')
 		{
-			if (map[i][j] != 49 && map[i][j] != 48 && map[i][j] != 80 && map[i][j] != 67 && map[i][j] != 69)
-				ft_printf("Elements error");
-			if (map[i][j] == COLLECT)
-				collective_count++;
-			count_elements(map[i][j]);
+			if (game->map[i][j] != 49 && game->map[i][j] != 48 && game->map[i][j] != 80 && game->map[i][j] != 67 && game->map[i][j] != 69)
+				ft_perror("Elements error.");
+			if (game->map[i][j] == COLLECT)
+				game->collectives += 1;
+			count_elements(game->map[i][j]);
 			j++;
 		}
 		i++;
 	}
-	if (collective_count < 1)
-		ft_printf("Invalid number of collectibles");
-	return(collective_count);
+	if (game->collectives < 1)
+	 	ft_perror("Invalid number of collectibles.");
 }
 
 static void    check_size(char **map)
@@ -98,22 +95,17 @@ static void    check_size(char **map)
 			j++;
 		}
 		if (line_len != len)
-			ft_printf("Size map error 1\n");
+			ft_perror("Size map error.");
 		len = 0;
 	}
 	if ((i < 3 || line_len < 3) || (i == 3 && line_len < 5) || (line_len == 3 && i < 5))
-	{
-		//ft_free_array(map);
-		ft_printf("Size map error 2\n");
-	}
+		ft_perror("Size map error.");
 }
 
-void	check_map(char **map)
-{
-	int	collective_count;
-	
-	check_size(map);
-	collective_count = check_elements(map);
-	check_limits(map);
-	check_valid_journey(map, collective_count);
+void	check_map(t_game *game)
+{	
+	check_size(game->map);
+	check_elements(game);
+	check_limits(game->map);
+	check_valid_journey(game->map, game->collectives);
 }

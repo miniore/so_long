@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:19:02 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/26 18:46:00 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:33:34 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct game
 	int			width;
 	int			height;
 	char		**map;
+	int			collectives;
 	mlx_image_t	*floor_img;
 	mlx_image_t	*wall_img;
 	mlx_image_t	*player_img;
@@ -36,8 +37,9 @@ typedef struct game
 	mlx_image_t	*end_img;
 }	t_game;
 
+void	ft_perror(char *error_message);
 char	**read_map(char *file);
-void	check_map(char **map);
+void	check_map(t_game *game);
 void	check_valid_journey(char **map, int collect);
 void	create_textures(t_game *game);
 int		load_images(t_game *game);

@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 18:44:36 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/26 18:48:16 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:40:53 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	put_img(t_game *game, mlx_image_t *img, int x, int y)
 {
 	if (mlx_image_to_window(game->window, img, x * 64, y * 64) < 0)
-		ft_printf("Error\n");
+		ft_perror("Image error.");
 }
 
 int	load_images(t_game *game)
@@ -59,10 +59,10 @@ static mlx_image_t	*textures_to_img(t_game *game, char *route)
 
 	texture = mlx_load_png(route);
 	if (!texture)
-        ft_printf("Error\n");
+        ft_perror("Load image error.");
 	img = mlx_texture_to_image(game->window, texture);
 	if (!img)
-		ft_printf("Error imagen");
+		ft_perror("Load image error.");
 	mlx_delete_texture(texture);
 	return (img);
 }

@@ -39,6 +39,9 @@ $(PRINTF):
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+debug:$(OBJ_FILES) $(PRINTF) $(LIBFT) $(MLX42)
+	$(CC) -g $(CFLAGS) $(OBJ_FILES) $(PRINTF) $(LIBFT) $(MLX) -o $(NAME)
+
 clean:
 	make clean -C Libft
 	make clean -C Libft/Printf

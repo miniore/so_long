@@ -6,7 +6,7 @@
 /*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:29:45 by porellan          #+#    #+#             */
-/*   Updated: 2024/11/26 18:51:54 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/13 20:38:59 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,10 @@ void	check_valid_journey(char **map, int collect)
 	}
 	end_found = check_end(map_copy);				
 	if (moving == 1 && (!collect && end_found == 1))
-		ft_printf("Journey success\n");
+		ft_printf("Valid journey");
 	else
-		ft_printf("Journey failed\n");
-	free(map_copy);
+	{
+		free(map_copy);
+		ft_perror("Invalid journey");
+	}
 }
