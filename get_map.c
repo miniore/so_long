@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 21:30:00 by miniore           #+#    #+#             */
-/*   Updated: 2024/11/25 16:36:55 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/22 18:47:04 by miniore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	**copy_map(t_list *lines)
 	return (map);
 }
 
-char	**read_map(char *file)
+char	**read_map(t_game *game, char *file)
 {
     int	fd;
 	t_list	*lines;
@@ -47,7 +47,10 @@ char	**read_map(char *file)
 	lines = NULL;
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
-		exit(1);
+	{
+		free(game);
+		exit(EXIT_FAILURE);
+	}
 	while (1)
 	{
 		map_lines = get_next_line(fd);

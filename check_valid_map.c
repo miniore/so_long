@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   check_valid_map.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:29:45 by porellan          #+#    #+#             */
-/*   Updated: 2025/01/13 20:38:59 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:57:14 by miniore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "so_long.h"
 
-int	check_end(char **map)
+static int	check_end(char **map)
 {
 	int	i;
 	int	j;
@@ -23,8 +23,9 @@ int	check_end(char **map)
 		j = 0;
 		while (map[i][j])
 		{
-			if (map[i][j] == END && ((map[i][j + 1] == PLAYER || map[i][j - 1] == PLAYER) 
-				|| (map[i + 1][j] == PLAYER || map[i - 1][j] == PLAYER)))
+			if (map[i][j] == END && ((map[i][j + 1] == PLAYER
+				|| map[i][j - 1] == PLAYER) || (map[i + 1][j] == PLAYER
+				|| map[i - 1][j] == PLAYER)))
 			{
 				map[i][j] = PLAYER;
 				return (1);
@@ -36,7 +37,7 @@ int	check_end(char **map)
 	return (0);
 }
 
-int	write_in_map(char **map, int i, int j, int *collect)
+static int	write_in_map(char **map, int i, int j, int *collect)
 {
 	if (map[i][j] == FLOOR)
 	{
@@ -62,7 +63,7 @@ int	write_in_map(char **map, int i, int j, int *collect)
 	return (0);
 }
 
-char	**map_dup(char **map)
+static char	**map_dup(char **map)
 {
 	char	**dup_map;
 	int		j;
@@ -83,39 +84,44 @@ char	**map_dup(char **map)
 	return (dup_map);
 }
 
-void	check_valid_journey(char **map, int collect)
+static int	fun(t_game *game, char **map_copy, int collect)
 {
-	char	**map_copy;
-	int	end_found;
-	int	moving;
 	int	i;
 	int	j;
-
-	map_copy = map_dup(map);
-	moving = 1;
-	end_found = 0;
-	while ((collect != 0 && end_found != 1) && moving == 1)
+	
+	while ((collect != 0 && game->is_end != 1) && game->moving == 1)
 	{
 		i = 1;
-		moving = 0;
+		game->moving = 0;
 		while (map_copy[i + 1])
 		{
 			j = 1;
 			while (map_copy[i][j + 1])
 			{
 				if (write_in_map(map_copy, i, j, &collect))
-					moving = 1;
+					game->moving = 1;
 				j++;
 			}
 			i++;
 		}
 	}
-	end_found = check_end(map_copy);				
-	if (moving == 1 && (!collect && end_found == 1))
-		ft_printf("Valid journey");
+	return(collect);
+}
+
+void	check_valid_journey(t_game *game)
+{
+	char	**map_copy;
+	int		collect;
+
+	map_copy = map_dup(game->map);
+	game->moving = 1;
+	collect = fun(game, map_copy, game->collectives);
+	game->is_end = check_end(map_copy);				
+	if (game->moving == 1 && (!collect && game->is_end == 1))
+		free_array(map_copy);
 	else
 	{
-		free(map_copy);
-		ft_perror("Invalid journey");
+		free_array(map_copy);
+		ft_perror(game, "Invalid journey.\n");
 	}
 }

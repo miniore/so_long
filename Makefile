@@ -14,11 +14,14 @@ SRC_FILES = so_long.c \
 			get_map.c \
 			check_map.c \
 			check_valid_map.c \
-			get_images.c
+			get_images.c \
+			player_movement.c \
+			keyhook.c \
+			so_long_utils.c
 OBJ_FILES = $(SRC_FILES:.c=.o)
 
 CC = cc
-CFLAGS = -Wall -Werror -Wextra -O2 $(INCLUDE)
+CFLAGS = -Wall -Werror -Wextra -g -O2 $(INCLUDE)
 
 all: $(NAME)
 	@echo "make    ✅"
