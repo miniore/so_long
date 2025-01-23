@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:14:32 by porellan          #+#    #+#             */
-/*   Updated: 2025/01/22 18:46:39 by miniore          ###   ########.fr       */
+/*   Updated: 2025/01/23 12:25:09 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,29 +40,29 @@ static void	calculate_size(t_game *game)
 		game->height = i;
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-    t_game	*game;
+	t_game	*game;
 
 	if (argc != 2)
 	{
-        ft_putstr_fd("Arguments error.\n", 2);
+		ft_putstr_fd("Arguments error.\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	check_file(argv[1]);
 	game = (t_game *)ft_calloc(1, sizeof(t_game));
-	if(!game)
-		return(EXIT_FAILURE);
+	if (!game)
+		return (EXIT_FAILURE);
 	game->map = read_map(game, argv[1]);
 	check_map(game);
 	calculate_size(game);
-	game->window = mlx_init(game->width * 64, game->height * 64, "Game42", false);
-	if (!game->window)
+	game->wndw = mlx_init(game->width * 64, game->height * 64, "Game42", false);
+	if (!game->wndw)
 		ft_perror(game, "Window error.\n");
 	create_textures(game);
 	load_images(game);
-	mlx_key_hook(game->window, my_keyhook, game);
-	mlx_loop(game->window);
+	mlx_key_hook(game->wndw, my_keyhook, game);
+	mlx_loop(game->wndw);
 	end_game(game);
 	return (EXIT_SUCCESS);
 }

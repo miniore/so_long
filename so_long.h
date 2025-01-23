@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:19:02 by porellan          #+#    #+#             */
-/*   Updated: 2025/01/22 18:46:04 by miniore          ###   ########.fr       */
+/*   Updated: 2025/01/23 12:20:09 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 # include "Libft/Printf/ft_printf.h"
 # include <MLX42.h>
 
-#define PLAYER 'P'
-#define END 'E'
-#define COLLECT 'C'
-#define FLOOR '0'
-#define WALL '1'
+# define PLAYER 'P'
+# define END 'E'
+# define COLLECT 'C'
+# define FLOOR '0'
+# define WALL '1'
 
 typedef struct game
 {
-	mlx_t		*window;
+	mlx_t		*wndw;
 	int			width;
 	int			height;
 	char		**map;
@@ -44,7 +44,7 @@ void	ft_perror(t_game *game, char *error_message);
 void	free_array(char **array);
 char	**read_map(t_game *game, char *file);
 void	check_map(t_game *game);
-void	check_valid_journey(t_game *game);
+void	check_valid_path(t_game *game);
 void	create_textures(t_game *game);
 void	load_images(t_game *game);
 void	my_keyhook(mlx_key_data_t keydata, void *param);

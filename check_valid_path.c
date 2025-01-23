@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   check_valid_map.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:29:45 by porellan          #+#    #+#             */
-/*   Updated: 2025/01/21 15:57:14 by miniore          ###   ########.fr       */
+/*   Updated: 2025/01/23 12:19:51 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "so_long.h"
+#include "so_long.h"
 
 static int	check_end(char **map)
 {
@@ -63,6 +63,30 @@ static int	write_in_map(char **map, int i, int j, int *collect)
 	return (0);
 }
 
+static int	check_recollect(t_game *game, char **map_copy, int collect)
+{
+	int	i;
+	int	j;
+
+	while ((collect != 0 && game->is_end != 1) && game->moving == 1)
+	{
+		i = 1;
+		game->moving = 0;
+		while (map_copy[i + 1])
+		{
+			j = 1;
+			while (map_copy[i][j + 1])
+			{
+				if (write_in_map(map_copy, i, j, &collect))
+					game->moving = 1;
+				j++;
+			}
+			i++;
+		}
+	}
+	return (collect);
+}
+
 static char	**map_dup(char **map)
 {
 	char	**dup_map;
@@ -84,44 +108,20 @@ static char	**map_dup(char **map)
 	return (dup_map);
 }
 
-static int	fun(t_game *game, char **map_copy, int collect)
-{
-	int	i;
-	int	j;
-	
-	while ((collect != 0 && game->is_end != 1) && game->moving == 1)
-	{
-		i = 1;
-		game->moving = 0;
-		while (map_copy[i + 1])
-		{
-			j = 1;
-			while (map_copy[i][j + 1])
-			{
-				if (write_in_map(map_copy, i, j, &collect))
-					game->moving = 1;
-				j++;
-			}
-			i++;
-		}
-	}
-	return(collect);
-}
-
-void	check_valid_journey(t_game *game)
+void	check_valid_path(t_game *game)
 {
 	char	**map_copy;
 	int		collect;
 
 	map_copy = map_dup(game->map);
 	game->moving = 1;
-	collect = fun(game, map_copy, game->collectives);
-	game->is_end = check_end(map_copy);				
+	collect = check_recollect(game, map_copy, game->collectives);
+	game->is_end = check_end(map_copy);
 	if (game->moving == 1 && (!collect && game->is_end == 1))
 		free_array(map_copy);
 	else
 	{
 		free_array(map_copy);
-		ft_perror(game, "Invalid journey.\n");
+		ft_perror(game, "Invalid path.\n");
 	}
 }

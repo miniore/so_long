@@ -13,7 +13,7 @@ INCLUDE := -Iinclude -IMLX42/include/MLX42
 SRC_FILES = so_long.c \
 			get_map.c \
 			check_map.c \
-			check_valid_map.c \
+			check_valid_path.c \
 			get_images.c \
 			player_movement.c \
 			keyhook.c \

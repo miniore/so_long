@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
+/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 19:05:27 by miniore           #+#    #+#             */
-/*   Updated: 2025/01/22 12:48:10 by miniore          ###   ########.fr       */
+/*   Updated: 2025/01/23 12:17:33 by porellan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ static int	count_elements(char c)
 	if (c == 69)
 		end_final++;
 	if (player_count > 1 || end_final > 1)
-		return(1);
-	return(0);
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 static void	check_elements(t_game *game)
@@ -64,27 +64,28 @@ static void	check_elements(t_game *game)
 		j = 0;
 		while (game->map[i][j] && game->map[i][j] != '\n')
 		{
-			if (game->map[i][j] != 49 && game->map[i][j] != 48 && game->map[i][j]
+			if (game->map[i][j] != 49
+				&& game->map[i][j] != 48 && game->map[i][j]
 				!= 80 && game->map[i][j] != 67 && game->map[i][j] != 69)
 				ft_perror(game, "Elements error.\n");
 			if (game->map[i][j] == COLLECT)
 				game->collectives += 1;
-			if(count_elements(game->map[i][j]))
+			if (count_elements(game->map[i][j]))
 				ft_perror(game, "Too many player or end elements.\n");
 			j++;
 		}
 		i++;
 	}
 	if (game->collectives < 1)
-	 	ft_perror(game, "Invalid number of collectibles.\n");
+		ft_perror(game, "Invalid number of collectibles.\n");
 }
 
-static void    check_size(t_game *game)
+static void	check_size(t_game *game)
 {
-    int	line_len;
+	int		line_len;
 	int		i;
 	int		j;
-	int len;
+	int		len;
 
 	i = 0;
 	len = 0;
@@ -92,7 +93,7 @@ static void    check_size(t_game *game)
 	while (game->map[++i])
 	{
 		j = 0;
-		while(game->map[i][j] && game->map[i][j] != '\n')
+		while (game->map[i][j] && game->map[i][j] != '\n')
 		{
 			len++;
 			j++;
@@ -107,9 +108,9 @@ static void    check_size(t_game *game)
 }
 
 void	check_map(t_game *game)
-{	
+{
 	check_size(game);
 	check_elements(game);
 	check_limits(game);
-	check_valid_journey(game);
+	check_valid_path(game);
 }
