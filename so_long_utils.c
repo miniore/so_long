@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: porellan <porellan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: miniore <miniore@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 20:57:21 by miniore           #+#    #+#             */
-/*   Updated: 2025/01/23 12:33:20 by porellan         ###   ########.fr       */
+/*   Updated: 2025/01/24 20:38:20 by miniore          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ void	ft_perror(t_game *game, char *error_message)
 {
 	ft_putstr_fd(error_message, 2);
 	delete_images(game);
-	mlx_terminate(game->wndw);
+	if(game->wndw)
+		mlx_terminate(game->wndw);
 	free_array(game->map);
 	free(game);
 	exit(EXIT_FAILURE);
